@@ -1,0 +1,197 @@
+cd /chemin/vers/ton-depot
+
+cat > index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Répétiteur Maths - Première Cameroun 🇨🇲</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 10px; }
+    button { padding: 10px; margin: 5px 0; width: 100%; font-size: 1rem; }
+    input { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <h1>📘 Répétiteur Maths - Première Cameroun 🇨🇲</h1>
+  <div id="menu">
+    <button onclick="showModule('fonctions')">1. Fonctions du second degré</button>
+    <button onclick="showModule('derivation')">2. Dérivation</button>
+    <button onclick="showModule('trigonometrie')">3. Trigonométrie</button>
+  </div>
+
+  <div id="module" style="display:none;">
+    <button style="font-size:0.8rem;" onclick="backToMenu()">← Retour au menu</button>
+    <div id="quizArea"></div>
+  </div>
+
+  <script>
+    function showModule(id) {
+      document.getElementById('menu').style.display = 'none';
+      document.getElementById('module').style.display = 'block';
+      let html = '';
+
+      if (id === 'fonctions') {
+        html = \`
+          <h2>Fonctions du second degré</h2>
+          <p>Soit f(x) = ax² + bx + c :</p>
+          <ul>
+            <li>Forme canonique : a(x – α)² + β</li>
+            <li>Discriminant : Δ = b² – 4ac</li>
+            <li>Racines : x = [–b ± √Δ] / (2a)</li>
+          </ul>
+          <p><strong>Quiz :</strong> Si f(x) = x² – 4x + 3, combien vaut Δ ?</p>
+          <input id="answer" placeholder="Ta réponse" style="width: 100%; padding: 8px;">
+          <button onclick="checkAnswer('4')">Valider</button>
+          <p id="feedback"></p>
+        \`;
+      } 
+      else if (id === 'derivation') {
+        html = \`
+          <h2>Dérivation</h2>
+          <h3>1. Définition :</h3>
+          <p>La dérivée d'une fonction f en un point donne le taux de variation de f. C’est la pente de la tangente au point.</p>
+          <h3>2. Dérivée de f(x) = ax² + bx + c :</h3>
+          <ul>
+            <li>f'(x) = 2ax + b</li>
+            <li>f'(x) donne la variation de f (croissance ou décroissance)</li>
+          </ul>
+          <h3>3. Exemple :</h3>
+          <p>Soit f(x) = 3x² + 2x – 5</p>
+          <ul>
+            <li>f'(x) = 6x + 2</li>
+            <li>f'(1) = 6 × 1 + 2 = 8</li>
+            <li>Donc f est croissante autour de x = 1</li>
+          </ul>
+          <h3>4. Propriétés utiles :</h3>
+          <ul>
+            <li>Si f'(x) &gt; 0 ⇒ f est croissante</li>
+            <li>Si f'(x) &lt; 0 ⇒ f est décroissante</li>
+            <li>Si f'(x) = 0 ⇒ f a un extremum (maximum ou minimum)</li>
+          </ul>
+          <h3>🧪 Exercice 1 :</h3>
+          <p>Donner la dérivée de f(x) = 4x² – 7x + 2</p>
+          <input id="answer1" placeholder="Ta réponse (ex: 8x - 7)" style="width: 100%; padding: 8px;">
+          <button onclick="checkAnswerEx1()">Valider</button>
+          <p id="feedback1"></p>
+          <h3>🧪 Exercice 2 :</h3>
+          <p>Soit f(x) = –2x² + 3x – 1. Calculer f'(2)</p>
+          <input id="answer2" placeholder="Ta réponse (nombre)" style="width: 100%; padding: 8px;">
+          <button onclick="checkAnswerEx2()">Valider</button>
+          <p id="feedback2"></p>
+        \`;
+      }
+      else if (id === 'trigonometrie') {
+        html = \`
+          <h2>Trigonométrie</h2>
+          <h3>1. Définitions dans un triangle rectangle :</h3>
+          <ul>
+            <li>sin(θ) = côté opposé / hypothénuse</li>
+            <li>cos(θ) = côté adjacent / hypothénuse</li>
+            <li>tan(θ) = côté opposé / côté adjacent</li>
+          </ul>
+          <h3>2. Identités trigonométriques :</h3>
+          <ul>
+            <li>sin²(x) + cos²(x) = 1</li>
+            <li>tan(x) = sin(x) / cos(x) (si cos(x) ≠ 0)</li>
+          </ul>
+          <h3>3. Valeurs remarquables :</h3>
+          <ul>
+            <li>sin(0°) = 0 ; cos(0°) = 1 ; tan(0°) = 0</li>
+            <li>sin(30°) = 1/2 ; cos(30°) = √3/2 ; tan(30°) = 1/√3</li>
+            <li>sin(45°) = √2/2 ; cos(45°) = √2/2 ; tan(45°) = 1</li>
+          </ul>
+          <h3>🧪 Exercice 1 :</h3>
+          <p>Dans un triangle rectangle, si l’angle A = 30° et l’hypoténuse mesure 10 cm, combien mesure le côté opposé à A ?</p>
+          <p>(Utiliser sin(30°) = 0.5)</p>
+          <input id="tri1" placeholder="Réponse en cm" style="width: 100%; padding: 8px;">
+          <button onclick="checkTri1()">Valider</button>
+          <p id="fbtri1"></p>
+          <button onclick="nextTri1()">Continuer avec un autre exercice</button>
+          <div id="tri2" style="display:none;">
+            <h3>🧪 Exercice 2 :</h3>
+            <p>Si tan(θ) = 3/4, calcule cos(θ). (Arrondir à 2 chiffres après la virgule)</p>
+            <input id="tri2ans" placeholder="Réponse (ex: 0.8)" style="width: 100%; padding: 8px;">
+            <button onclick="checkTri2()">Valider</button>
+            <p id="fbtri2"></p>
+          </div>
+        \`;
+      }
+
+      document.getElementById('quizArea').innerHTML = html;
+    }
+
+    function backToMenu() {
+      document.getElementById('module').style.display = 'none';
+      document.getElementById('menu').style.display = 'block';
+      document.getElementById('quizArea').innerHTML = '';
+    }
+
+    function checkAnswer(correct) {
+      const userAnswer = document.getElementById('answer').value;
+      const normalize = txt => txt.toLowerCase().replace(/\\s+/g, '').trim();
+      const isCorrect = normalize(userAnswer) === normalize(correct);
+      const fb = isCorrect
+        ? "✅ Bonne réponse !"
+        : \`❌ Mauvaise réponse. La bonne réponse est : \${correct}\`;
+      document.getElementById('feedback').innerText = fb;
+    }
+
+    function checkAnswerEx1() {
+      const userAnswer = document.getElementById('answer1').value;
+      const normalize = txt => txt.toLowerCase().replace(/\\s+/g, '').trim();
+      const correct = "8x-7";
+      const isCorrect = normalize(userAnswer) === normalize(correct);
+      const fb = isCorrect
+        ? "✅ Bravo, c'est correct !"
+        : \`❌ Mauvaise réponse. La bonne réponse est : 8x - 7\`;
+      document.getElementById('feedback1').innerText = fb;
+    }
+
+    function checkAnswerEx2() {
+      const userAnswer = document.getElementById('answer2').value.trim();
+      const correct = "-5";
+      const fb = userAnswer === correct
+        ? "✅ Bravo, c'est correct !"
+        : \`❌ Mauvaise réponse. La bonne réponse est : -5\`;
+      document.getElementById('feedback2').innerText = fb;
+    }
+
+    function checkAnswerEx3() {
+      const userAnswer = document.getElementById('answer3').value.trim().replace(/\\s+/g, '');
+      const isCorrect = userAnswer === "4/5" || userAnswer === "0.8";
+      const fb = isCorrect
+        ? "✅ Bravo, tu maîtrises !"
+        : \`❌ Mauvaise réponse. La bonne réponse est : 4/5\`;
+      document.getElementById('feedback3').innerText = fb;
+    }
+
+    function checkTri1() {
+      const user = document.getElementById('tri1').value.trim();
+      const fb = user === "5"
+        ? "✅ Bien joué ! Côté opposé = 10 × 0.5 = 5 cm"
+        : "❌ Mauvaise réponse. Il fallait faire 10 × 0.5 = 5 cm.";
+      document.getElementById('fbtri1').innerText = fb;
+    }
+
+    function nextTri1() {
+      document.getElementById('tri2').style.display = 'block';
+    }
+
+    function checkTri2() {
+      const user = document.getElementById('tri2ans').value.replace(",", ".").trim();
+      const isCorrect = Math.abs(parseFloat(user) - 0.8) < 0.05;
+      const fb = isCorrect
+        ? "✅ Bravo ! cos(θ) ≈ 0.8"
+        : "❌ Essaie encore. Astuce : utilise la formule sin² + cos² = 1.";
+      document.getElementById('fbtri2').innerText = fb;
+    }
+  </script>
+</body>
+</html>
+EOF
+
+git add index.html
+git commit -m "Ajout du répétiteur de maths complet avec modules Fonctions, Dérivation, Trigonométrie"
+git push origin main
